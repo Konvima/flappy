@@ -2,10 +2,9 @@ package cz.uhk.pro2.flappy.game.tiles;
 
 import java.awt.Image;
 
-public class WallTile extends AbstractWallTile{
+public class EmptyTile extends AbstractWallTile{
 	
-	public WallTile(Image image) {
+	public EmptyTile(Image image) {
 		super(image);
 	}
-
 }

@@ -1,16 +1,25 @@
 package cz.uhk.pro2.flappy.game.service;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
+
 import cz.uhk.pro2.flappy.game.GameBoard;
 import cz.uhk.pro2.flappy.game.Tile;
+import cz.uhk.pro2.flappy.game.tiles.EmptyTile;
 import cz.uhk.pro2.flappy.game.tiles.WallTile;
 
 public class CsvBoardLoader implements BoardLoader {
@@ -30,7 +39,8 @@ public class CsvBoardLoader implements BoardLoader {
 			int numberOfTypes = Integer.parseInt(line[0]);
 			System.out.println("Number of types: " + numberOfTypes);
 			logger.log(Level.FINE, "Number of types: " + numberOfTypes);
-			// zatim preskocime radky s typy dlazdic
+			//typy dlazdic
+			Map<String, Tile> tileTypes = new HashMap<>();
 			for (int i = 0; i < numberOfTypes; i++) {
 				line = br.readLine().split(";");
 				String type = line[0];
@@ -40,7 +50,8 @@ public class CsvBoardLoader implements BoardLoader {
 				int spriteWidth = Integer.parseInt(line[4]);
 				int spriteHeight = Integer.parseInt(line[5]);
 				String url = line[6];
-				// TODO
+				Tile tile = createTile(clazz, spriteX, spriteY, spriteWidth, spriteHeight, url);
+				tileTypes.put(type, tile);
 			}
 			// radek s pocty radku a sloupcu v matici herni plochy
 			line = br.readLine().split(";");
@@ -64,18 +75,39 @@ public class CsvBoardLoader implements BoardLoader {
 						// bunka v CSV chybi, povazujeme za prazdnou
 						t = "";
 					}
-					if (!"".equals(t)) {
-						// v bunce je neprazdny
-						tiles[i][j] = new WallTile();
+						tiles[i][j] = tileTypes.get(t);
 					}
 				}
-			}
 			GameBoard gb = new GameBoard(tiles);
 			return gb;
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Nepodporovane kodovani souboru");
+			throw new RuntimeException("Nepodporovane kodovani souboru", e);
 		} catch (IOException e) {
-			throw new RuntimeException("Chyba pri cteni souboru s levelem");
+			throw new RuntimeException("Chyba pri cteni souboru s levelem nebo obrazku", e);
+		}
+	}
+
+	private Tile createTile(String clazz, int spriteX, int spriteY, int spriteWidth,
+			int spriteHeight, String url) throws IOException {
+		// nacist obrazed z URL
+		BufferedImage originalImage = ImageIO.read(new URL(url));
+		//vyriznout z obrazku sprite podle x,y a sirka, vyska
+		BufferedImage croppedImage = originalImage.getSubimage(spriteX, spriteY, spriteWidth, spriteHeight);
+		//zvetsime/zmensime sprite tak aby pasoval do naseho rozmeru dlazdice
+		BufferedImage resizedImage = new BufferedImage(Tile.SIZE, Tile.SIZE, BufferedImage.TYPE_INT_RGB);
+		// TODO nastavit parametry pro scaling
+		Graphics2D g = (Graphics2D) resizedImage.getGraphics();
+		g.drawImage(croppedImage, 0, 0, Tile.SIZE, Tile.SIZE, null);
+		//podle typu vytvorime instanci patricne tridy
+		switch(clazz){
+		case "Wall":
+			return new WallTile(resizedImage);
+		case "Bonus":
+			return new WallTile(resizedImage);
+		case "Empty":
+			return new EmptyTile(resizedImage);
+		default:
+			throw new RuntimeException("Neznama trida dlazdice " + clazz);
 		}
 	}
 }

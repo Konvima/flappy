@@ -17,7 +17,7 @@ public class GameBoard implements TickAware{
 	
 	public GameBoard() {
 		tiles = new Tile[10][10];
-		tiles[2][1] = new WallTile();
+		//tiles[2][1] = new WallTile();
 		bird = new Bird(100, 100); // TODO umistit do stredu okna
 	}
 	
