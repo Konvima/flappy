@@ -9,16 +9,14 @@ public class GameBoard implements TickAware{
 	int shiftX; //o kolik pixelu svet ubehl doleva
 	int widthPix; //sirka hraci plochy v pixelech
 	Bird bird;
+	boolean gameOver; // true pokud doslo ke kolizi a hra ma skoncit
 	
 	public GameBoard(Tile[][] tiles){
 		this.tiles = tiles;
-		bird = new Bird(100, 100);
+		reset();
 	}
 	
-	public GameBoard() {
-		tiles = new Tile[10][10];
-		//tiles[2][1] = new WallTile();
-		bird = new Bird(100, 100); // TODO umistit do stredu okna
+	public GameBoard(){
 	}
 	
 	public void setWidthPix(int widthPix) {
@@ -33,7 +31,7 @@ public class GameBoard implements TickAware{
 	 * Vykresli celou herni plochu(sloupy, bonusy, ptaka) na platno g.
 	 * @param g
 	 */
-	public void draw(Graphics g){
+	public void drawAndDetectCollisions(Graphics g){
 		int minJ = shiftX/Tile.SIZE; //j-souradnice prvni dlazdice vlevo kterou je nutne kreslit
 		//pocet dlazdic (na sirku), kolik je nutne kreslit (do viewportu)
 		// + 2 protoze muze chybet cast bunky vlevo a vpravo kvuli obema celociselnym delenim
@@ -50,20 +48,39 @@ public class GameBoard implements TickAware{
 					int viewportX = j * Tile.SIZE - shiftX;
 					int viewportY = i * Tile.SIZE;
 					t.draw(g, viewportX, viewportY);
+					// otestujeme moznou kolizi dlazdice s ptakem
+					if (t instanceof WallTile){
+						// t je zed
+						// otestujeme, jestli dlazdice t koliduje s ptakem
+						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE, Tile.SIZE)){
+							gameOver = true; // doslo ke kolizi, hra ma skoncit
+						}
+					}
 				}
 			}
 		}
 		// TODO vykreslit ptaka
 		bird.draw(g);
 	}
-
+	
+	public void reset(){
+		gameOver = false;
+		bird = new Bird(30, 100);
+	}
+	
+	public boolean isGameOver(){
+		return gameOver;
+	}
+	
 	@Override
 	public void tick(long ticksSinceStart) {
-		//s kazdym tickem ve hre posuneme hru o jeden pixel
-		//tj. pocet ticku a pixelu se rovnaji
-		shiftX = (int)ticksSinceStart;		
-		// dame vedet ptakovi, ze hodiny tickly
-		bird.tick(ticksSinceStart);		
+		if(!gameOver){
+			//s kazdym tickem ve hre posuneme hru o jeden pixel
+			//tj. pocet ticku a pixelu se rovnaji
+			shiftX = (int)ticksSinceStart;		
+			// dame vedet ptakovi, ze hodiny tickly
+			bird.tick(ticksSinceStart);	
+		} // else pro gameOver hra stoji na miste			
 	}
 	
 

@@ -20,7 +20,7 @@ import cz.uhk.pro2.flappy.game.Tile;
 import cz.uhk.pro2.flappy.game.service.BoardLoader;
 import cz.uhk.pro2.flappy.game.service.CsvBoardLoader;
 
-public class MainWindow extends JFrame { //TODO udelat svuj level!!!
+public class MainWindow extends JFrame { 
 	
 	BoardPanel pnl = new BoardPanel();
 	GameBoard gameBoard;
@@ -30,7 +30,7 @@ public class MainWindow extends JFrame { //TODO udelat svuj level!!!
 		@Override
 		public void paint(Graphics g) {
 			super.paint(g);
-			gameBoard.draw(g);
+			gameBoard.drawAndDetectCollisions(g);
 		}
 	}
 	
@@ -54,10 +54,16 @@ public class MainWindow extends JFrame { //TODO udelat svuj level!!!
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				//TODO metoda kickTheBird()
+				if (e.getButton() == MouseEvent.BUTTON1)
 				gameBoard.kickTheBird();
-			}			
-		});
+				else if (e.getButton() == MouseEvent.BUTTON3){
+					if (gameBoard.isGameOver()){
+					gameBoard.reset();
+					x = 0;
+					}
+				}
+				}
+			});
 		
 		
 		Timer t = new Timer(20, e ->{
@@ -66,11 +72,7 @@ public class MainWindow extends JFrame { //TODO udelat svuj level!!!
 		});
 		
 		t.start();
-	}
-	
-	
-	
-	
+	}	
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
