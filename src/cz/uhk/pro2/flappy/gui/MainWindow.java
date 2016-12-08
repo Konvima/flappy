@@ -21,6 +21,7 @@ import cz.uhk.pro2.flappy.game.service.BoardLoader;
 import cz.uhk.pro2.flappy.game.service.CsvBoardLoader;
 
 public class MainWindow extends JFrame { 
+	//TODO implementovat dlazdici BonusTile, kdyz narazi do ptaka, zmizi, promenna active typu boolean
 	
 	BoardPanel pnl = new BoardPanel();
 	GameBoard gameBoard;
@@ -35,6 +36,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	public MainWindow(){
+		super("Flappy bird");
 		try (InputStream is = new FileInputStream("level.csv")){
 			BoardLoader loader = new CsvBoardLoader(is);
 			gameBoard = loader.getGameBoard();
@@ -46,6 +48,7 @@ public class MainWindow extends JFrame {
 			gameBoard = new GameBoard();
 		}
 		pnl.setPreferredSize(new Dimension(300, Tile.SIZE*20)); //TODO 
+		setAlwaysOnTop(true);
 		add(pnl, BorderLayout.CENTER);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();

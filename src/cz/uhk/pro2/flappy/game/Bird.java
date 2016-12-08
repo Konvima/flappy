@@ -2,7 +2,10 @@ package cz.uhk.pro2.flappy.game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.geom.Ellipse2D;
+
+import cz.uhk.pro2.flappy.game.tiles.BonusTile;
 
 public class Bird implements TickAware{
 	//fyzika
@@ -19,9 +22,12 @@ public class Bird implements TickAware{
 	//kolik ticku jeste zbyva, nez ptak zacne po nakopnuti zase padat
 	int ticksToFall = 0;
 	
-	public Bird(int initialX, int initialY) {
+	Image imageOfTheBird;
+	
+	public Bird(int initialX, int initialY, Image imageOfTheBird) {
 		this.viewportX = initialX;
 		this.viewportY = initialY;
+		this.imageOfTheBird = imageOfTheBird;
 	}
 	
 	public void kick(){
@@ -30,10 +36,11 @@ public class Bird implements TickAware{
 	}
 	
 	public void draw(Graphics g){
-		g.setColor(Color.GREEN);
-		g.fillOval((int)viewportX - Tile.SIZE/2, (int)viewportY - Tile.SIZE/2, Tile.SIZE, Tile.SIZE);
-		g.setColor(Color.BLACK);
-		g.drawString(viewportX + ", " + viewportY, (int)viewportX, (int)viewportY);
+		g.drawImage(imageOfTheBird, (int)viewportX, (int)viewportY, null);
+//		g.setColor(Color.GREEN);
+//		g.fillOval((int)viewportX - Tile.SIZE/2, (int)viewportY - Tile.SIZE/2, Tile.SIZE, Tile.SIZE);
+//		g.setColor(Color.BLACK);
+//		g.drawString(viewportX + ", " + viewportY, (int)viewportX, (int)viewportY);
 	}
 	
 	public boolean collidesWithRectangle(int x, int y, int w, int h){
@@ -42,6 +49,10 @@ public class Bird implements TickAware{
 		Ellipse2D.Float birdBoundery = new Ellipse2D.Float((int)viewportX - Tile.SIZE/2, (int)viewportY - Tile.SIZE/2, Tile.SIZE, Tile.SIZE);
 		// otestujeme, jestli ptak koliduje s obdelnikem zadanym parametry
 		return birdBoundery.intersects(x, y, w, h);		
+	}	
+	
+	public Image getImageOfTheBird() {
+		return imageOfTheBird;
 	}
 
 	@Override
@@ -54,6 +65,14 @@ public class Bird implements TickAware{
 			//ptak ma padat
 			velocityY = koefDown;
 		}
+	}
+	
+	public double getViewportX() {
+		return viewportX;
+	}
+	
+	public double getViewportY() {
+		return viewportY;
 	}
 
 }

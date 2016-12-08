@@ -1,7 +1,10 @@
 package cz.uhk.pro2.flappy.game;
 
 import java.awt.Graphics;
+import java.awt.Image;
 
+import cz.uhk.pro2.flappy.game.tiles.BonusTile;
+import cz.uhk.pro2.flappy.game.tiles.EmptyTile;
 import cz.uhk.pro2.flappy.game.tiles.WallTile;
 
 public class GameBoard implements TickAware{
@@ -11,8 +14,10 @@ public class GameBoard implements TickAware{
 	Bird bird;
 	boolean gameOver; // true pokud doslo ke kolizi a hra ma skoncit
 	
-	public GameBoard(Tile[][] tiles){
+	public GameBoard(Tile[][] tiles, Image imageOfTheBird){
 		this.tiles = tiles;
+		bird = new Bird(30, 100, imageOfTheBird);
+		//TODO poresit imageOfTheBird
 		reset();
 	}
 	
@@ -52,20 +57,23 @@ public class GameBoard implements TickAware{
 					if (t instanceof WallTile){
 						// t je zed
 						// otestujeme, jestli dlazdice t koliduje s ptakem
-						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE, Tile.SIZE)){
+						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE-5, Tile.SIZE-5)){
 							gameOver = true; // doslo ke kolizi, hra ma skoncit
+						}
+					} else if(t instanceof BonusTile){
+						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE-5, Tile.SIZE-5)){
+							((BonusTile) t).setActive(false);
 						}
 					}
 				}
 			}
 		}
-		// TODO vykreslit ptaka
 		bird.draw(g);
 	}
 	
 	public void reset(){
 		gameOver = false;
-		bird = new Bird(30, 100);
+		bird = new Bird(30, 100, bird.getImageOfTheBird());
 	}
 	
 	public boolean isGameOver(){
