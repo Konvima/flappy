@@ -36,8 +36,7 @@ public class CsvBoardLoader implements BoardLoader {
 	public GameBoard getGameBoard() {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
 			// radek s poctem typu dlazdic
-			String[] line = br.readLine().split(";");
-			
+			String[] line = br.readLine().split(";");			
 			int numberOfTypes = Integer.parseInt(line[0]);
 			System.out.println("Number of types: " + numberOfTypes);
 			logger.log(Level.FINE, "Number of types: " + numberOfTypes);
@@ -83,6 +82,10 @@ public class CsvBoardLoader implements BoardLoader {
 					} else {
 						// bunka v CSV chybi, povazujeme za prazdnou
 						t = "";
+					}
+					if("B".equals(t)){
+						tiles[i][j] = ((BonusTile)tileTypes.get("B")).clone();
+						continue;
 					}
 						tiles[i][j] = tileTypes.get(t);
 					}

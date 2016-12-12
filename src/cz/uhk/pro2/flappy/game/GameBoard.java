@@ -87,7 +87,14 @@ public class GameBoard implements TickAware{
 			//tj. pocet ticku a pixelu se rovnaji
 			shiftX = (int)ticksSinceStart;		
 			// dame vedet ptakovi, ze hodiny tickly
-			bird.tick(ticksSinceStart);	
+			bird.tick(ticksSinceStart);
+				for(int i = 0; i < tiles.length; i++){
+					for(int k = 0; k < tiles[0].length; k++){
+						if(tiles[i][k] instanceof BonusTile){
+							((BonusTile)tiles[i][k]).tick(ticksSinceStart);
+						}
+					}
+				}
 		} // else pro gameOver hra stoji na miste			
 	}
 	
