@@ -1,5 +1,7 @@
 package cz.uhk.pro2.flappy.game;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -12,6 +14,7 @@ public class GameBoard implements TickAware{
 	int shiftX; //o kolik pixelu svet ubehl doleva
 	int widthPix; //sirka hraci plochy v pixelech
 	Bird bird;
+	int points;
 	boolean gameOver; // true pokud doslo ke kolizi a hra ma skoncit
 	
 	public GameBoard(Tile[][] tiles, Image imageOfTheBird){
@@ -57,23 +60,35 @@ public class GameBoard implements TickAware{
 					if (t instanceof WallTile){
 						// t je zed
 						// otestujeme, jestli dlazdice t koliduje s ptakem
-						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE-5, Tile.SIZE-5)){
+						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE, Tile.SIZE)){
 							gameOver = true; // doslo ke kolizi, hra ma skoncit
 						}
 					} else if(t instanceof BonusTile){
-						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE-5, Tile.SIZE-5)){
+						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE, Tile.SIZE)){
+							if(((BonusTile) t).isActive()) points++;
 							((BonusTile) t).setActive(false);
 						}
 					}
 				}
 			}
 		}
+		g.setColor(new Color(0xff0000));
+		g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+		g.drawString("" + points, 5, 20);
 		bird.draw(g);
 	}
 	
 	public void reset(){
 		gameOver = false;
 		bird = new Bird(30, 100, bird.getImageOfTheBird());
+		for(int i = 0; i < tiles.length; i++){
+			for(int k = 0; k < tiles[0].length; k++){
+				if(tiles[i][k] instanceof BonusTile){
+					((BonusTile)tiles[i][k]).setActive(true);
+				}
+			}
+		}
+		points = 0;
 	}
 	
 	public boolean isGameOver(){

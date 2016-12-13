@@ -36,7 +36,7 @@ public class Bird implements TickAware{
 	}
 	
 	public void draw(Graphics g){
-		g.drawImage(imageOfTheBird, (int)viewportX, (int)viewportY, null);
+		g.drawImage(imageOfTheBird, (int)viewportX - Tile.SIZE/2, (int)viewportY - Tile.SIZE/2, null);
 //		g.setColor(Color.GREEN);
 //		g.fillOval((int)viewportX - Tile.SIZE/2, (int)viewportY - Tile.SIZE/2, Tile.SIZE, Tile.SIZE);
 //		g.setColor(Color.BLACK);
@@ -66,13 +66,4 @@ public class Bird implements TickAware{
 			velocityY = koefDown;
 		}
 	}
-	
-	public double getViewportX() {
-		return viewportX;
-	}
-	
-	public double getViewportY() {
-		return viewportY;
-	}
-
 }
