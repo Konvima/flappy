@@ -5,10 +5,9 @@ import java.awt.Image;
 
 import cz.uhk.pro2.flappy.game.TickAware;
 
-public class BonusTile extends AbstractTile implements Cloneable, TickAware {	
+public class BonusTile extends AbstractTile implements Cloneable {	
 	
 	private boolean active;
-	private int timeToSleep;
 		
 	public BonusTile(Image image){
 		super(image);
@@ -16,9 +15,6 @@ public class BonusTile extends AbstractTile implements Cloneable, TickAware {
 	}
 	
 	public void setActive(boolean active) {
-		if(!active){
-			timeToSleep = 100;
-		}
 		this.active = active;
 	}
 	
@@ -37,14 +33,5 @@ public class BonusTile extends AbstractTile implements Cloneable, TickAware {
 	public BonusTile clone(){
 		return new BonusTile(image);
 	}
-
-	@Override
-	public void tick(long ticksSinceStart) {
-		if(!active){
-			timeToSleep--;
-		}
-		if(timeToSleep <= 0){
-			active = true;
-		}
-	}
+	
 }

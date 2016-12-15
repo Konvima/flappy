@@ -45,7 +45,7 @@ public class GameBoard implements TickAware{
 		// + 2 protoze muze chybet cast bunky vlevo a vpravo kvuli obema celociselnym delenim
 		int countJ = widthPix/Tile.SIZE + 2;
 		for(int i = 0; i < tiles.length; i++){
-			for(int j = minJ; j < minJ+countJ; j++){
+			for(int j = minJ; j <= minJ+countJ; j++){
 				//chceme aby level bezel porad dokola, takze modJ se 
 				// na konci pole vraci zase na 0; tile[0].length je pocet sloupcu
 				int modJ = j % tiles[0].length; 
@@ -55,6 +55,11 @@ public class GameBoard implements TickAware{
 					//vykreslime ji
 					int viewportX = j * Tile.SIZE - shiftX;
 					int viewportY = i * Tile.SIZE;
+					if(j == minJ + countJ){
+						if(t instanceof BonusTile){
+							((BonusTile) t).setActive(true);
+						}
+					}
 					t.draw(g, viewportX, viewportY);
 					// otestujeme moznou kolizi dlazdice s ptakem
 					if (t instanceof WallTile){
@@ -103,13 +108,6 @@ public class GameBoard implements TickAware{
 			shiftX = (int)ticksSinceStart;		
 			// dame vedet ptakovi, ze hodiny tickly
 			bird.tick(ticksSinceStart);
-				for(int i = 0; i < tiles.length; i++){
-					for(int k = 0; k < tiles[0].length; k++){
-						if(tiles[i][k] instanceof BonusTile){
-							((BonusTile)tiles[i][k]).tick(ticksSinceStart);
-						}
-					}
-				}
 		} // else pro gameOver hra stoji na miste			
 	}
 	
