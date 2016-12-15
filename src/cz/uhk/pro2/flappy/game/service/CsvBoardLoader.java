@@ -52,12 +52,14 @@ public class CsvBoardLoader implements BoardLoader {
 				int spriteWidth = Integer.parseInt(line[4]);
 				int spriteHeight = Integer.parseInt(line[5]);
 				String url = line[6];
+				String extraInfo = line.length >= 8 ? line[7] : ""; //pouziva se u bonusu
+				Tile referencedTile = tileTypes.get(extraInfo);
 				if (clazz.equals("Bird")){
 					//specialni radek - definice ptaka
 					imageOfTheBird = getImage(spriteX, spriteY, spriteWidth, spriteHeight, url);
 				}else {
 					// normalni dlazdice
-				Tile tile = createTile(clazz, spriteX, spriteY, spriteWidth, spriteHeight, url);
+				Tile tile = createTile(clazz, spriteX, spriteY, spriteWidth, spriteHeight, url, referencedTile);
 				tileTypes.put(type, tile);
 				}
 			}
@@ -100,14 +102,14 @@ public class CsvBoardLoader implements BoardLoader {
 	}	
 
 	private Tile createTile(String clazz, int spriteX, int spriteY, int spriteWidth,
-			int spriteHeight, String url) throws IOException {
+			int spriteHeight, String url, Tile referencedTile) throws IOException {
 		BufferedImage resizedImage = getImage(spriteX, spriteY, spriteWidth, spriteHeight, url);
 		//podle typu vytvorime instanci patricne tridy
 		switch(clazz){
 		case "Wall":
 			return new WallTile(resizedImage);
 		case "Bonus":
-			return new BonusTile(resizedImage);
+			return new BonusTile(resizedImage, referencedTile);
 		case "Empty":
 			return new EmptyTile(resizedImage);
 		default:

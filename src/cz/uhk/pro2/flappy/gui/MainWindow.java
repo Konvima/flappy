@@ -54,27 +54,33 @@ public class MainWindow extends JFrame {
 		pack();
 		gameBoard.setWidthPix(pnl.getWidth());
 		
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1)
-				gameBoard.kickTheBird();
-				else if (e.getButton() == MouseEvent.BUTTON3){
-					if (gameBoard.isGameOver()){
-					gameBoard.reset();
-					x = 0;
-					}
-				}
-				}
-			});
-		
-		
 		Timer t = new Timer(20, e ->{
 			gameBoard.tick(x++);
 			pnl.repaint();
 		});
 		
-		t.start();
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1){
+					//kdyz jeste nebezi timer, tak ho nastartovat
+					if(!t.isRunning()) t.start();
+					else
+					gameBoard.kickTheBird();
+				}
+				else if (e.getButton() == MouseEvent.BUTTON3){
+					if (gameBoard.isGameOver()){
+					gameBoard.reset();
+					x = 0; //posunout svet na zacatek;
+					gameBoard.tick(0);
+					// prekreslit
+					pnl.repaint();
+					// zastavit casovac az do dalsiho kliknuti mysi
+					t.stop();
+					}
+				}
+				}
+			});	
 	}	
 
 	public static void main(String[] args) {

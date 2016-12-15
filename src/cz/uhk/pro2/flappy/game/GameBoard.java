@@ -47,7 +47,7 @@ public class GameBoard implements TickAware{
 		for(int i = 0; i < tiles.length; i++){
 			for(int j = minJ; j <= minJ+countJ; j++){
 				//chceme aby level bezel porad dokola, takze modJ se 
-				// na konci pole vraci zase na 0; tile[0].length je pocet sloupcu
+				//na konci pole vraci zase na 0; tile[0].length je pocet sloupcu
 				int modJ = j % tiles[0].length; 
 				Tile t = tiles[i][modJ];
 				if(t != null){
