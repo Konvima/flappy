@@ -1,9 +1,12 @@
 package cz.uhk.pro2.flappy.game;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+
+import javax.swing.JOptionPane;
 
 import cz.uhk.pro2.flappy.game.tiles.BonusTile;
 import cz.uhk.pro2.flappy.game.tiles.EmptyTile;

@@ -14,7 +14,7 @@ public class Bird implements TickAware{
 	static final int ticksFlyingUp = 4;
 	
 	//souradnice stredu ptaka
-	double viewportX;
+	int viewportX;
 	double viewportY; //double, aby se dala jemne ladit rychlost padani
 	
 	//rychlost padani (pozitivni) nebo vzletu (negativni)
@@ -36,7 +36,7 @@ public class Bird implements TickAware{
 	}
 	
 	public void draw(Graphics g){
-		g.drawImage(imageOfTheBird, (int)viewportX - Tile.SIZE/2, (int)viewportY - Tile.SIZE/2, null);
+		g.drawImage(imageOfTheBird, viewportX-Tile.SIZE/2, (int) (viewportY-Tile.SIZE/2),null);
 //		g.setColor(Color.GREEN);
 //		g.fillOval((int)viewportX - Tile.SIZE/2, (int)viewportY - Tile.SIZE/2, Tile.SIZE, Tile.SIZE);
 //		g.setColor(Color.BLACK);
@@ -46,7 +46,7 @@ public class Bird implements TickAware{
 	public boolean collidesWithRectangle(int x, int y, int w, int h){
 		// vytvorime kruznici (jako objekt) reprezentujici obrys ptaka
 		//TODO vytvaret birdBoundery jen kdyz je potreba
-		Ellipse2D.Float birdBoundery = new Ellipse2D.Float((int)viewportX - Tile.SIZE/2, (int)viewportY - Tile.SIZE/2, Tile.SIZE, Tile.SIZE);
+		Ellipse2D.Float birdBoundery = new Ellipse2D.Float(viewportX - Tile.SIZE/2, (int)viewportY - Tile.SIZE/2, Tile.SIZE, Tile.SIZE);
 		// otestujeme, jestli ptak koliduje s obdelnikem zadanym parametry
 		return birdBoundery.intersects(x, y, w, h);		
 	}	

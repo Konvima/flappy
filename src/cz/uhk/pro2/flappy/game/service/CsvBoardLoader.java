@@ -117,7 +117,7 @@ public class CsvBoardLoader implements BoardLoader {
 		}
 	}
 
-	private BufferedImage getImage(int spriteX, int spriteY, int spriteWidth, int spriteHeight, String url)
+	/*private BufferedImage getImage(int spriteX, int spriteY, int spriteWidth, int spriteHeight, String url)
 			throws IOException, MalformedURLException {
 		// nacist obrazed z URL
 		BufferedImage originalImage = ImageIO.read(new URL(url));
@@ -129,5 +129,19 @@ public class CsvBoardLoader implements BoardLoader {
 		Graphics2D g = (Graphics2D) resizedImage.getGraphics();
 		g.drawImage(croppedImage, 0, 0, Tile.SIZE, Tile.SIZE, null);
 		return resizedImage;
+	} */
+	
+	private BufferedImage getImage(int spriteX, int spriteY, int spriteWidth, int spriteHeight, String url)
+			throws IOException, MalformedURLException {
+		//nacist obrazek z url
+		BufferedImage original = ImageIO.read(new URL(url));
+		//vyriznout cast z obrazku (sprite) podle x,y sirka vyska
+		BufferedImage cropped = original.getSubimage(spriteX, spriteY, spriteWidth, spriteHeight);
+		//zveetsime/zmensime sprite, aby pasoval do dlazdice
+		BufferedImage resized = new BufferedImage(Tile.SIZE, Tile.SIZE, BufferedImage.TYPE_INT_ARGB);
+		//TODO nastavit dalsi parametry pro skalovani
+		Graphics2D g = (Graphics2D)resized.getGraphics();
+		g.drawImage(cropped, 0, 0, Tile.SIZE, Tile.SIZE, null);
+		return resized;
 	}
 }
