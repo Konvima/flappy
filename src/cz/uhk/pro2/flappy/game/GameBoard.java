@@ -17,7 +17,7 @@ public class GameBoard implements TickAware{
 	int shiftX; //o kolik pixelu svet ubehl doleva
 	int widthPix; //sirka hraci plochy v pixelech
 	Bird bird;
-	int points;
+	long points;
 	boolean gameOver; // true pokud doslo ke kolizi a hra ma skoncit
 	
 	public GameBoard(Tile[][] tiles, Image imageOfTheBird){
@@ -59,23 +59,25 @@ public class GameBoard implements TickAware{
 					int viewportX = j * Tile.SIZE - shiftX;
 					int viewportY = i * Tile.SIZE;
 					if(j == minJ + countJ){
-						if(t instanceof BonusTile){
-							((BonusTile) t).setActive(true);
-						}
+						t.refresh();
 					}
 					t.draw(g, viewportX, viewportY);
-					// otestujeme moznou kolizi dlazdice s ptakem
-					if (t instanceof WallTile){
-						// t je zed
-						// otestujeme, jestli dlazdice t koliduje s ptakem
-						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE, Tile.SIZE)){
-							gameOver = true; // doslo ke kolizi, hra ma skoncit
-						}
-					} else if(t instanceof BonusTile){
-						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE, Tile.SIZE)){
-							if(((BonusTile) t).isActive()) points++;
-							((BonusTile) t).setActive(false);
-						}
+//					// otestujeme moznou kolizi dlazdice s ptakem
+//					if (t instanceof WallTile){
+//						// t je zed
+//						// otestujeme, jestli dlazdice t koliduje s ptakem
+//						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE, Tile.SIZE)){
+//							gameOver = true; // doslo ke kolizi, hra ma skoncit
+//						}
+//					} else if(t instanceof BonusTile){
+//						if (bird.collidesWithRectangle(viewportX, viewportY, Tile.SIZE, Tile.SIZE)){
+//							if(((BonusTile) t).isActive()) points++;
+//							((BonusTile) t).setActive(false);
+//						}
+//					}					
+					if(t.testColisionHasDied(bird, viewportX, viewportY)) gameOver = true;
+					else {
+						points += (t.testColisionOptainBonusPoint(bird, viewportX, viewportY));
 					}
 				}
 			}

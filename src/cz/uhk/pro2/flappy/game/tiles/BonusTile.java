@@ -3,11 +3,11 @@ package cz.uhk.pro2.flappy.game.tiles;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import cz.uhk.pro2.flappy.game.Bird;
 import cz.uhk.pro2.flappy.game.TickAware;
 import cz.uhk.pro2.flappy.game.Tile;
 
-public class BonusTile extends AbstractTile implements Cloneable {	
-	
+public class BonusTile extends AbstractTile implements Cloneable {		
 	private boolean active;
 	private Tile emptyTile;
 		
@@ -37,6 +37,21 @@ public class BonusTile extends AbstractTile implements Cloneable {
 	@Override
 	public BonusTile clone(){
 		return new BonusTile(image, emptyTile);
+	}
+	
+	@Override
+	public int testColisionOptainBonusPoint(Bird bird, int x, int y) {
+		if(bird.collidesWithRectangle(x, y, Tile.SIZE, Tile.SIZE) && active){
+			//ptak narazil do teto bonusove dlazdice
+			active = false; //sezereme bonus
+			return 1; //vratime extra body za bonus
+		}
+		return 0; //ptak nenarazil do tohoto bonusu, nebo bonus uz neni aktivni
+	}
+	
+	@Override
+	public void refresh() {
+		active = true;
 	}
 	
 }

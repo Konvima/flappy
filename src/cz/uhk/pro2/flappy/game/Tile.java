@@ -20,5 +20,27 @@ public interface Tile {
 	 */
 	void draw(Graphics g, int x, int y);
 	
-
+	/**
+	 * Otestuje, zda ptak koliduje s touto dlazdici na souradnicich x, y
+	 * a pokud ano a jedna se o zed, vrati true.
+	 * @param bird
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	boolean testColisionHasDied(Bird bird, int x, int y);
+	/**
+	 * Otestuje, zda ptak kolicuje s touto dlazdici na souradnicich z, y a pokud ano
+	 * a jedna se o bonus, tak vratin pocet bodu, kolik ma hrac za bonus obdrzet
+	 * @param bird
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	int testColisionOptainBonusPoint(Bird bird, int x, int y);
+	/**
+	 * Obnovi stav dlazdice pri "protoceni"herniho sveta znovu dokola
+	 * Bude zavolana minimalne jednou kdyz se dlazice znovu objevi na pravem okraji herni plochy
+	 */
+	void refresh();
 }
